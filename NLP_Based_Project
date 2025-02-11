@@ -1,1 +1,110 @@
-{"nbformat":4,"nbformat_minor":0,"metadata":{"colab":{"provenance":[],"authorship_tag":"ABX9TyNhhnlQA664/hFeM6Qnj8fC"},"kernelspec":{"name":"python3","display_name":"Python 3"},"language_info":{"name":"python"}},"cells":[{"cell_type":"code","source":["!pip install nlpcloud"],"metadata":{"id":"tZcbhHLLsVQi"},"execution_count":null,"outputs":[]},{"cell_type":"code","execution_count":2,"metadata":{"id":"_vUu0BXfqJuY","executionInfo":{"status":"ok","timestamp":1739288452250,"user_tz":-330,"elapsed":208,"user":{"displayName":"Tirth Joshi","userId":"18283276373156246927"}}},"outputs":[],"source":["from os import uname\n","import nlpcloud\n","import getpass\n","\n","class HomeClass:\n","  def __init__(self):\n","    self.__uDict={}   #To Store the user infor as database\n","\n","    print('''Hello! I hope you are good.\\n\n","Tell Me How You Would Like To Proceed?''')\n","    self.__menu()\n","\n","  def __menu(self):\n","    UserChoice = input('''\n","    1.) Press 1 To Register Yourself!\n","    2.) Press 2 To Login!\n","    3.) Press 3 To Exit!\\n\n","    ''')\n","\n","    if UserChoice=='1':\n","      self.__registerYourSelf()\n","    elif UserChoice=='2':\n","      self.__userLogin()\n","    else:\n","      exit()\n","\n","  def __registerYourSelf(self):\n","    uName = input('\\nEnter Your Name -> ')\n","    uEmail = input('Enter Your Email -> ')\n","    uPassword = getpass.getpass('Enter Your Password -> ')\n","\n","    if uEmail in self.__uDict:\n","      print('\\nThis Email is already registed! Please use Different Email.\\n')\n","    else:\n","      self.__uDict[uEmail]=[uName,uPassword]\n","      print('\\nUser Registered Sucessfully! You Can Login Now.\\n')\n","      self.__menu()\n","\n","  def __userLogin(self):\n","    uId = input('\\nEnter Your UserId/Email -> ')\n","    uPw = getpass.getpass('\\nEnter Your Password -> ')\n","    if uId in self.__uDict:\n","      if self.__uDict[uId][1]==uPw:\n","        print('\\nLogged in sucessfully')\n","        self.__loggedInMenu()\n","      else:\n","        print('\\nIncorrect UserId/Password')\n","        self.__userLogin()\n","\n","  def __loggedInMenu(self):\n","    uSelection = input('''\n","    1.) NRE(Entity Extraction)\n","    2.) Language Detetion\n","    3.) Sentiment Analysis\n","    4.) Logout\n","    ''')\n","\n","    if uSelection=='1':\n","      self.__NER()\n","    elif uSelection=='2':\n","      self.__language_translate()\n","    elif uSelection=='3':\n","      self.__sentiment_analysis()\n","    else:\n","      exit()\n","\n","  def __NER(self):\n","    uString = input('\\nEnter the String in which to want to check Entity -> ')\n","    uEntity = input('\\nEnter the Entity Name You Want To Search In Given String\\n -> ')\n","\n","    client = nlpcloud.Client(\"finetuned-llama-3-70b\", \"b1e7a40d2cc55bee395d7f42864c0bd96444745e\", gpu=True)\n","    response = client.entities(\n","    uString,\n","    searched_entity=uEntity\n","    )\n","\n","    print(response)\n","\n","  def __language_translate(self):\n","    # sLang = input('\\nEnter Source Language -> ')\n","    # dLang = input('\\nEnter Destination Language -> ')\n","    uString1 = input('\\nEnter Para -> ')\n","\n","    client = nlpcloud.Client(\"nllb-200-3-3b\", \"b1e7a40d2cc55bee395d7f42864c0bd96444745e\", gpu=False)\n","    response1 = client.translation(\n","        uString1,\n","        source=\"eng_Latn\",\n","        target=\"guj_Gujr\"\n",")\n","\n","    print(response1)\n","\n","  def __sentiment_analysis(self):\n","    uString2 = input('\\nEnter Para -> ')\n","\n","    client = nlpcloud.Client(\"finetuned-llama-3-70b\", \"b1e7a40d2cc55bee395d7f42864c0bd96444745e\", gpu=True)\n","    response2 = client.sentiment(\n","        uString2,\n","        target=\"NLP Cloud\"\n","        )\n","\n","    for i in r1['scored_labels']:\n","      print(i['label'])\n","\n","    # print(response2)\n","\n","obj=HomeClass()"]}]}
+!pip install nlpcloud
+
+
+from os import uname
+import nlpcloud
+import getpass
+
+class HomeClass:
+  def __init__(self):
+    self.__uDict={}   #To Store the user infor as database
+
+    print('''Hello! I hope you are good.\n
+Tell Me How You Would Like To Proceed?''')
+    self.__menu()
+
+  def __menu(self):
+    UserChoice = input('''
+    1.) Press 1 To Register Yourself!
+    2.) Press 2 To Login!
+    3.) Press 3 To Exit!\n
+    ''')
+
+    if UserChoice=='1':
+      self.__registerYourSelf()
+    elif UserChoice=='2':
+      self.__userLogin()
+    else:
+      exit()
+
+  def __registerYourSelf(self):
+    uName = input('\nEnter Your Name -> ')
+    uEmail = input('Enter Your Email -> ')
+    uPassword = getpass.getpass('Enter Your Password -> ')
+
+    if uEmail in self.__uDict:
+      print('\nThis Email is already registed! Please use Different Email.\n')
+    else:
+      self.__uDict[uEmail]=[uName,uPassword]
+      print('\nUser Registered Sucessfully! You Can Login Now.\n')
+      self.__menu()
+
+  def __userLogin(self):
+    uId = input('\nEnter Your UserId/Email -> ')
+    uPw = getpass.getpass('\nEnter Your Password -> ')
+    if uId in self.__uDict:
+      if self.__uDict[uId][1]==uPw:
+        print('\nLogged in sucessfully')
+        self.__loggedInMenu()
+      else:
+        print('\nIncorrect UserId/Password')
+        self.__userLogin()
+
+  def __loggedInMenu(self):
+    uSelection = input('''
+    1.) NRE(Entity Extraction)
+    2.) Language Detetion
+    3.) Sentiment Analysis
+    4.) Logout
+    ''')
+
+    if uSelection=='1':
+      self.__NER()
+    elif uSelection=='2':
+      self.__language_translate()
+    elif uSelection=='3':
+      self.__sentiment_analysis()
+    else:
+      exit()
+
+  def __NER(self):
+    uString = input('\nEnter the String in which to want to check Entity -> ')
+    uEntity = input('\nEnter the Entity Name You Want To Search In Given String\n -> ')
+
+    client = nlpcloud.Client("finetuned-llama-3-70b", "b1e7a40d2cc55bee395d7f42864c0bd96444745e", gpu=True)
+    response = client.entities(
+    uString,
+    searched_entity=uEntity
+    )
+
+    print(response)
+
+  def __language_translate(self):
+    # sLang = input('\nEnter Source Language -> ')
+    # dLang = input('\nEnter Destination Language -> ')
+    uString1 = input('\nEnter Para -> ')
+
+    client = nlpcloud.Client("nllb-200-3-3b", "b1e7a40d2cc55bee395d7f42864c0bd96444745e", gpu=False)
+    response1 = client.translation(
+        uString1,
+        source="eng_Latn",
+        target="guj_Gujr"
+)
+
+    print(response1)
+
+  def __sentiment_analysis(self):
+    uString2 = input('\nEnter Para -> ')
+
+    client = nlpcloud.Client("finetuned-llama-3-70b", "b1e7a40d2cc55bee395d7f42864c0bd96444745e", gpu=True)
+    response2 = client.sentiment(
+        uString2,
+        target="NLP Cloud"
+        )
+
+    for i in r1['scored_labels']:
+      print(i['label'])
+
+    # print(response2)
+
+obj=HomeClass()
